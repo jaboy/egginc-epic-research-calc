@@ -409,6 +409,17 @@ function loadBase64() {
 	save();
 }
 
+function copyShareableLink() {
+	navigator.clipboard.writeText(document.URL + '?data=' + btoa(v2serialize(userData)));
+	var button = document.querySelector("#shareableButton");
+	button.innerHTML = "Copied!";
+	button.disabled = true;
+	setTimeout(() => {
+		button.innerHTML = "Copy Link";
+		button.disabled = false;
+	}, "2500");
+}
+
 
 // Helper methods for dynamic data calculations, refreshing UI
 function calculate() {
