@@ -821,5 +821,9 @@ window.onload = function() {
 	const eiData = urlParams.get('data')
 	if (eiData) {
 		load(false, atob(eiData))
+
+		let url = new URL(window.location.href);
+		url.searchParams.delete('data');
+		window.history.replaceState({}, document.title, url);
 	}
 };
