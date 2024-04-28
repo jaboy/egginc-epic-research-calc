@@ -273,6 +273,21 @@ function load(firsttime, fromstring) {
 	// Should prevent errors when the userData structure has changed compared to the user's localstorage.
 	// Also REAL fancy because thanks javascript.
 	var localData = JSON.parse(fromstring || localStorage.userData);
+
+	if (localData.v != undefined && localData.v === 2) {
+		// TODO v2 parse
+	}
+	else {
+		// Backwards compatibility
+		v1parse(localData);
+	}
+
+	if (!firsttime) {
+		populateInputs();
+	}
+}
+
+function v1parse(localData) {
 	var initialData = JSON.parse(JSON.stringify(initialUserData));
 
 	var localColumns = JSON.parse(JSON.stringify(localData.columns || {}));
@@ -288,10 +303,6 @@ function load(firsttime, fromstring) {
 	userData.upgrades = _.extend(initialUpgrades, localUpgrades);
 	userData.columns = _.extend(initialColumns, localColumns);
 	userData.increase = _.extend(initialIncrease, localIncrease);
-
-	if (!firsttime) {
-		populateInputs();
-	}
 }
 
 function exportBase64() {
