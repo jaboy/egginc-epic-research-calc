@@ -300,8 +300,8 @@ function v1parse(localData) {
 	var initialIncrease = JSON.parse(JSON.stringify(initialUserData.increase));
 
 	userData = _.extend(initialData, localData);
-	userData.upgrades = _.extend(initialUpgrades, localUpgrades);
 	userData.columns = _.extend(initialColumns, localColumns);
+	userData.upgrades = _.extend(initialUpgrades, localUpgrades);
 	userData.increase = _.extend(initialIncrease, localIncrease);
 }
 
