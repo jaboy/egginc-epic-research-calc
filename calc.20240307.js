@@ -711,4 +711,10 @@ window.onload = function() {
 	document.querySelector("#chkcalcpiggy").addEventListener("change", userUpdateEggs);
 	document.querySelector("#optcalctrucktype").addEventListener("change", userUpdateEggs);
 	document.querySelector("#epicdiscount").addEventListener("change", userUpdateEggs);
+
+	const urlParams = new URLSearchParams(window.location.search);
+	const eiData = urlParams.get('data')
+	if (eiData) {
+		load(false, atob(eiData))
+	}
 };
