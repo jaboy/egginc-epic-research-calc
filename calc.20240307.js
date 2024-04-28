@@ -313,6 +313,7 @@ function exportBase64() {
 
 function loadBase64() {
 	load(false, atob(document.querySelector("#exportfield").value));
+	save();
 }
 
 
