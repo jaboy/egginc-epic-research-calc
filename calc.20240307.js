@@ -820,7 +820,12 @@ window.onload = function() {
 	const urlParams = new URLSearchParams(window.location.search);
 	const eiData = urlParams.get('data')
 	if (eiData) {
-		load(false, atob(eiData))
+		try {
+			load(false, atob(eiData))
+		}
+		catch(e) {
+			console.error(e)
+		}
 
 		let url = new URL(window.location.href);
 		url.searchParams.delete('data');
