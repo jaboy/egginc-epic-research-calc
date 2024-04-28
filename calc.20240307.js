@@ -71,6 +71,57 @@ var initialUserData = {
 	},
 };
 
+var rootKeyMap = {
+	"e": "eggs",
+	"pl": "piggyLevel",
+	"pb": "piggyBank",
+	"pd": "piggyDiscount",
+	"eo": "epicCalcOnlyDesired",
+	"ep": "epicCalcIncludePiggy",
+	"et": "epicCalcTruckType",
+	"ed": "epicDiscount",
+	"ul": "ultraLevel",
+	"hc": "hideCompleted",
+	"c": "columns",
+	"u": "upgrades",
+	"i": "increase",
+};
+
+var researchKeyMap = {
+	"0": "holdToHatch",
+	"1": "epicHatchery",
+	"2": "epicIntHatchery",
+	"3": "videoDoubler",
+	"4": "epicClucking",
+	"5": "epicMultiplier",
+	"6": "cheaperContractors",
+	"7": "bustUnions",
+	"8": "labUpgrade",
+	"9": "siloCapacity",
+	"10": "internalHatcherySharing",
+	"11": "internalHatcheryCalm",
+	"12": "accountingTricks",
+	"13": "soulFood",
+	"14": "prestigeBonus",
+	"15": "droneRewards",
+	"16": "epicComfyNests",
+	"17": "transportationLobbyists",
+	"18": "prophecyBonus",
+	"19": "holdToResearch",
+	"20": "ftlDrive",
+	"21": "zeroG",
+	"22": "hyperloopStation",
+	"23": "fuelTank",
+};
+
+var columnsKeyMap = {
+	"d": "desc",
+	"b": "bonus",
+	"s": "spent",
+	"r": "remaining",
+	"t": "total",
+}
+
 var totals = {
 	cost: 0,
 	levels: 0,
@@ -260,7 +311,7 @@ function getDiscountMultiplier(key) {
 
 // Data persistence helpers
 function save() {
-	localStorage.userData = JSON.stringify(userData);
+	localStorage.userData = v2serialize(userData);
 }
 
 function reset() {
@@ -275,7 +326,7 @@ function load(firsttime, fromstring) {
 	var localData = JSON.parse(fromstring || localStorage.userData);
 
 	if (localData.v != undefined && localData.v === 2) {
-		// TODO v2 parse
+		v2parse(localData);
 	}
 	else {
 		// Backwards compatibility
@@ -305,9 +356,51 @@ function v1parse(localData) {
 	userData.increase = _.extend(initialIncrease, localIncrease);
 }
 
+function v2parse(localData) {
+	var initialData = JSON.parse(JSON.stringify(initialUserData));
+	var initialColumns = JSON.parse(JSON.stringify(initialUserData.columns));
+	var initialUpgrades = JSON.parse(JSON.stringify(initialUserData.upgrades));
+	var initialIncrease = JSON.parse(JSON.stringify(initialUserData.increase));
+
+	var localData = keyMap(localData, rootKeyMap);
+
+	var localColumns = JSON.parse(JSON.stringify(localData.columns || {}));
+	var localUpgrades = JSON.parse(JSON.stringify(localData.upgrades || {}));
+	var localIncrease = JSON.parse(JSON.stringify(localData.increase || {}));
+
+	localColumns = keyMap(localData.columns, columnsKeyMap);
+	localUpgrades = keyMap(localData.upgrades, researchKeyMap);
+	localIncrease = keyMap(localData.increase, researchKeyMap);
+
+	userData = _.extend(initialData, localData);
+	userData.columns = _.extend(initialColumns, localColumns);
+	userData.upgrades = _.extend(initialUpgrades, localUpgrades);
+	userData.increase = _.extend(initialIncrease, localIncrease);
+}
+
+function keyMap(data, keyMap) {
+	return Object.fromEntries(Object.entries(data).map(([key,value]) => {
+		let newKey = keyMap[key];
+		return [newKey || key, value];
+	}));
+}
+
+function v2serialize(data) {
+	var mapped = JSON.parse(JSON.stringify(data));
+
+	mapped.columns = keyMap(mapped.columns, _.invert(columnsKeyMap));
+	mapped.upgrades = keyMap(mapped.upgrades, _.invert(researchKeyMap));
+	mapped.increase = keyMap(mapped.increase, _.invert(researchKeyMap));
+
+	mapped = keyMap(mapped, _.invert(rootKeyMap));
+	mapped.v = 2;
+
+	return JSON.stringify(mapped);
+}
+
 function exportBase64() {
 	var exportfield = document.querySelector("#exportfield");
-	exportfield.value = btoa(JSON.stringify(userData));
+	exportfield.value = btoa(v2serialize(userData));
 	exportfield.select();
 }
 
