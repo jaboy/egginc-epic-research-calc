@@ -449,7 +449,7 @@ function calculate() {
 		totalDesiredLevels += userData.increase[key];
 		totalDesiredCost += increaseCost;
 		document.querySelector("#fut-cost-" + key).innerHTML = increaseCost === 0 ? "&ndash;" : increaseCost.toLocaleString();
-		var nextCost = upgrade.costs[userData.upgrades[key]] - Math.floor(upgrade.costs[userData.upgrades[key]] * discountMultiplier);
+		var nextCost = upgrade.costs[userData.upgrades[key]] - Math.round(upgrade.costs[userData.upgrades[key]] * discountMultiplier);
 		document.querySelector("#fut-next-" + key).innerHTML = nextCost ? nextCost.toLocaleString() : "&ndash;";
 
 		// Buy?
