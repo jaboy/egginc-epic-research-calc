@@ -444,7 +444,7 @@ function calculate() {
 		var desiredLevels = userData.increase[key];
 		var discountMultiplier = getDiscountMultiplier(key);
 		for (i = userData.upgrades[key]; i < userData.upgrades[key] + desiredLevels; i++) {
-			increaseCost += upgrade.costs[i] - Math.floor(upgrade.costs[i] * discountMultiplier);
+			increaseCost += upgrade.costs[i] - Math.round(upgrade.costs[i] * discountMultiplier);
 		}
 		totalDesiredLevels += userData.increase[key];
 		totalDesiredCost += increaseCost;
@@ -506,7 +506,7 @@ function calculate() {
 		_.each(upgrades, function(upgrade, key) {
 			var discountMultiplier = getDiscountMultiplier(key);
 			for (i = userData.upgrades[key]; i < upgrades[key].costs.length; i++) {
-				remaining += upgrade.costs[i] - Math.floor(upgrade.costs[i] * discountMultiplier);
+				remaining += upgrade.costs[i] - Math.round(upgrade.costs[i] * discountMultiplier);
 			}
 		});
 	}
@@ -617,7 +617,7 @@ function buy(key) {
 	document.querySelector("#lvl-" + key).value++;
 	document.querySelector("#fut-inc-" + key).value--;
 	var discountMultiplier = getDiscountMultiplier(key);
-	document.querySelector("#goldeneggs").value -= upgrades[key].costs[userData.upgrades[key]] - Math.floor(upgrades[key].costs[userData.upgrades[key]] * discountMultiplier);
+	document.querySelector("#goldeneggs").value -= upgrades[key].costs[userData.upgrades[key]] - Math.round(upgrades[key].costs[userData.upgrades[key]] * discountMultiplier);
 
 	userUpdateIncrease(key);
 	userUpdateLevel(key, true);
